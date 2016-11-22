@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="default_preview">
+        <item>#df5a55</item>
+        <item>#f9bb72</item>
+        <item>#76afcf</item>
+        <item>#dd6495</item>
+        <item>#72d3b4</item>
+    </string-array>
+
+
+    <string-array name="comment_dialog">
+        <item>回复</item>
+        <item>复制</item>
+    </string-array>
+
+
+    <string-array name="joke_dialog">
+        <item>分享</item>
+        <item>复制</item>
+    </string-array>
+
+    <string-array name="video_more">
+        <item>分享</item>
+        <item>复制</item>
+        <item>打开</item>
+    </string-array>
+
+    <string-array name="picture_dialog">
+        <item>分享</item>
+        <item>保存</item>
+    </string-array>
+
+</resources>
