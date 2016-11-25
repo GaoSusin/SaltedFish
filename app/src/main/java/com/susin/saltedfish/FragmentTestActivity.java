@@ -10,9 +10,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Window;
 
+import com.susin.saltedfish.fragment.HistoryFragment;
 import com.susin.saltedfish.fragment.JokeFragment;
+import com.susin.saltedfish.fragment.NewsFragment;
 import com.susin.saltedfish.fragment.PictureFragment;
 import com.susin.saltedfish.fragment.WeChatFragment;
+import com.susin.saltedfish.model.History;
 import com.susin.saltedfish.widget.NavigationTabBar;
 
 import java.util.ArrayList;
@@ -33,6 +36,8 @@ public class FragmentTestActivity extends FragmentActivity {
     private PictureFragment boringPicFragment;
     private JokeFragment jokeFragment;
     private WeChatFragment weChatFragment;
+    private NewsFragment newsFragment;
+    private HistoryFragment historyFragment;
     private MyFragmentPagerAdapter adapter;
     private ArrayList<Fragment> fragmentsList;
 
@@ -61,11 +66,11 @@ public class FragmentTestActivity extends FragmentActivity {
         weChatFragment = new WeChatFragment();
         fragmentsList.add(weChatFragment);
 
-        boringPicFragment = new PictureFragment();
-        fragmentsList.add(boringPicFragment);
+        newsFragment = new NewsFragment();
+        fragmentsList.add(newsFragment);
 
-        boringPicFragment = new PictureFragment();
-        fragmentsList.add(boringPicFragment);
+        historyFragment = new HistoryFragment();
+        fragmentsList.add(historyFragment);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
         adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),

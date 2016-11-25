@@ -2,8 +2,6 @@ package com.susin.saltedfish.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -14,47 +12,43 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.susin.saltedfish.R;
 import com.susin.saltedfish.WebviewActivity;
 import com.susin.saltedfish.base.ConstantString;
 import com.susin.saltedfish.base.JDApplication;
 import com.susin.saltedfish.callback.LoadFinishCallBack;
 import com.susin.saltedfish.callback.LoadResultCallBack;
-import com.susin.saltedfish.model.WeChat;
-import com.susin.saltedfish.net.Request4WeChat;
+import com.susin.saltedfish.model.News;
+import com.susin.saltedfish.net.Request4News;
 import com.susin.saltedfish.net.RequestManager;
 import com.susin.saltedfish.utils.NetWorkUtil;
 import com.susin.saltedfish.utils.ShareUtil;
 import com.susin.saltedfish.utils.ShowToast;
 import com.susin.saltedfish.utils.UtilText;
 import com.susin.saltedfish.view.ImageLoadProxy;
-
 import java.util.ArrayList;
-
+import butterknife.ButterKnife;
 import butterknife.InjectView;
 
-public class WeChatAdapter extends RecyclerView.Adapter<WeChatAdapter.WeChatViewHolder> {
+public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
 
     private int page;
     private int lastPosition = -1;
-    private ArrayList<WeChat> mWeChats;
+    private ArrayList<News> mNews;
     private Activity mActivity;
     private LoadResultCallBack mLoadResultCallBack;
     private LoadFinishCallBack mLoadFinisCallBack;
 
-    public WeChatAdapter(Activity activity, LoadFinishCallBack loadFinisCallBack, LoadResultCallBack loadResultCallBack) {
+    public NewsAdapter(Activity activity, LoadFinishCallBack loadFinisCallBack, LoadResultCallBack loadResultCallBack) {
         mActivity = activity;
         mLoadFinisCallBack = loadFinisCallBack;
         mLoadResultCallBack = loadResultCallBack;
-        mWeChats = new ArrayList<>();
+        mNews = new ArrayList<>();
     }
 
     protected void setAnimation(View viewToAnimate, int position) {
@@ -67,55 +61,42 @@ public class WeChatAdapter extends RecyclerView.Adapter<WeChatAdapter.WeChatView
     }
 
     @Override
-    public void onViewDetachedFromWindow(WeChatViewHolder holder) {
+    public void onViewDetachedFromWindow(NewsViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
         holder.card.clearAnimation();
     }
 
     @Override
-    public WeChatViewHolder onCreateViewHolder(ViewGroup parent,
-                                             int viewType) {
+    public NewsViewHolder onCreateViewHolder(ViewGroup parent,
+                                               int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_wechat, parent, false);
-        return new WeChatViewHolder(v);
+                .inflate(R.layout.item_news, parent, false);
+        return new NewsViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(final WeChatViewHolder holder, final int position) {
+    public void onBindViewHolder(final NewsViewHolder holder, final int position) {
 
-        final WeChat weChat = mWeChats.get(position);
-        holder.tv_source.setText(weChat.getSource());
-        holder.tv_content.setText(weChat.getTitle());
+        final News news = mNews.get(position);
 
-        ImageLoadProxy.displayImageList(weChat.getFirstImg(), holder.ivPic, R.drawable.ic_loading_large, new
-                        SimpleImageLoadingListener() {
-                            @Override
-                            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                                super.onLoadingComplete(imageUri, view, loadedImage);
-                                holder.progress.setVisibility(View.GONE);
-                            }
-                        },
-                new ImageLoadingProgressListener() {
-                    @Override
-                    public void onProgressUpdate(String imageUri, View view, int current, int total) {
-                        holder.progress.setProgress((int) (current * 100f / total));
-                    }
-                });
-        holder.ll_wechat.setOnClickListener(new View.OnClickListener() {
+        holder.tvTitle.setText(news.getTitle());
+        holder.tvRealtype.setText(news.getRealtype());
+        holder.tvAuthor.setText(news.getAuthor_name());
+        holder.tvTime.setText(news.getDate());
+        ImageLoadProxy.displayImageList(news.getThumbnail_pic_s(),holder.ivPic1, R.drawable.ic_loading_large, null, null);
+        ImageLoadProxy.displayImageList(news.getThumbnail_pic_s02(),holder.ivPic2, R.drawable.ic_loading_large, null, null);
+        ImageLoadProxy.displayImageList(news.getThumbnail_pic_s03(),holder.ivPic3, R.drawable.ic_loading_large, null, null);
+        holder.llNews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
-                bundle.putString("url",weChat.getUrl());
+                bundle.putString("url",news.getUrl());
                 Intent intent = new Intent(mActivity, WebviewActivity.class);
                 intent.putExtras(bundle);
                 mActivity.startActivity(intent);
-
-//                Uri uri = Uri.parse(weChat.getUrl());
-//                Intent it = new Intent(Intent.ACTION_VIEW, uri);
-//                mActivity.startActivity(it);
             }
         });
-        holder.iv_share.setOnClickListener(new View.OnClickListener() {
+        holder.ivShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new MaterialDialog.Builder(mActivity)
@@ -129,11 +110,11 @@ public class WeChatAdapter extends RecyclerView.Adapter<WeChatAdapter.WeChatView
                                 switch (which) {
                                     //分享
                                     case 0:
-                                        ShareUtil.shareText(mActivity, weChat.getTitle().trim());
+                                        ShareUtil.shareText(mActivity, news.getTitle().trim());
                                         break;
                                     //复制
                                     case 1:
-                                        UtilText.copy(mActivity, weChat.getTitle());
+                                        UtilText.copy(mActivity, news.getTitle());
                                         break;
                                 }
 
@@ -147,7 +128,7 @@ public class WeChatAdapter extends RecyclerView.Adapter<WeChatAdapter.WeChatView
 
     @Override
     public int getItemCount() {
-        return mWeChats.size();
+        return mNews.size();
     }
 
     public void loadFirst() {
@@ -171,11 +152,11 @@ public class WeChatAdapter extends RecyclerView.Adapter<WeChatAdapter.WeChatView
     }
 
     private void loadData() {
-        RequestManager.addRequest(new Request4WeChat(WeChat.getRequestUrl(page),
-                new Response.Listener<ArrayList<WeChat>>
+        RequestManager.addRequest(new Request4News(News.getRequestUrl(),
+                new Response.Listener<ArrayList<News>>
                         () {
                     @Override
-                    public void onResponse(ArrayList<WeChat> response) {
+                    public void onResponse(ArrayList<News> response) {
                         getData(response);
                     }
                 }, new Response.ErrorListener() {
@@ -191,49 +172,55 @@ public class WeChatAdapter extends RecyclerView.Adapter<WeChatAdapter.WeChatView
         mLoadResultCallBack.onSuccess(LoadResultCallBack.SUCCESS_OK, null);
 //        WeChatCache weChatCacheUtil = WeChatCache.getInstance(mActivity);
         if (page == 1) {
-            mWeChats.clear();
+            mNews.clear();
             ShowToast.Short(ConstantString.LOAD_NO_NETWORK);
         }
-//        mWeChats.addAll(weChatCacheUtil.getCacheByPage(page));
+//        mNews.addAll(weChatCacheUtil.getCacheByPage(page));
         notifyDataSetChanged();
     }
 
-    private void getData(final ArrayList<WeChat> weChats) {
+    private void getData(final ArrayList<News> newses) {
 
         if (page == 1) {
-            mWeChats.clear();
+            mNews.clear();
             //首次正常加载之后，清空之前的缓存
 //                    WeChatCache.getInstance(mActivity).clearAllCache();
         }
 
-        mWeChats.addAll(weChats);
+        mNews.addAll(newses);
         notifyDataSetChanged();
 
         mLoadFinisCallBack.loadFinish(null);
         mLoadResultCallBack.onSuccess(LoadResultCallBack.SUCCESS_OK, null);
     }
 
-    public static class WeChatViewHolder extends RecyclerView.ViewHolder {
+    public static class NewsViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tv_source;
-        private TextView tv_content;
+        @InjectView(R.id.card)
+        CardView card;
+        @InjectView(R.id.ll_news)
+        LinearLayout llNews;
+        @InjectView(R.id.tv_title)
+        TextView tvTitle;
+        @InjectView(R.id.tv_realtype)
+        TextView tvRealtype;
+        @InjectView(R.id.tv_author)
+        TextView tvAuthor;
+        @InjectView(R.id.tv_time)
+        TextView tvTime;
+        @InjectView(R.id.iv_pic1)
+        ImageView ivPic1;
+        @InjectView(R.id.iv_pic2)
+        ImageView ivPic2;
+        @InjectView(R.id.iv_pic3)
+        ImageView ivPic3;
+        @InjectView(R.id.iv_share)
+        ImageView ivShare;
 
-        private ImageView iv_share;
-        private ImageView ivPic;
-        private CardView card;
-        private LinearLayout ll_wechat;
-        private ProgressBar progress;
 
-        public WeChatViewHolder(View contentView) {
+        public NewsViewHolder(View contentView) {
             super(contentView);
-
-            tv_source = (TextView) contentView.findViewById(R.id.tv_source);
-            tv_content = (TextView) contentView.findViewById(R.id.tv_content);
-            iv_share = (ImageView) contentView.findViewById(R.id.iv_share);
-            ivPic = (ImageView) contentView.findViewById(R.id.iv_pic);
-            card = (CardView) contentView.findViewById(R.id.card);
-            ll_wechat = (LinearLayout) contentView.findViewById(R.id.ll_wechat);
-            progress = (ProgressBar) contentView.findViewById(R.id.progress);
+            ButterKnife.inject(this,contentView);
         }
     }
 

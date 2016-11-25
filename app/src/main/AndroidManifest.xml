@@ -46,6 +46,10 @@
             android:name=".FragmentTestActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ImageDetailActivityTheme" />
+        <activity
+            android:name=".WebviewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ImageDetailActivityTheme" />
     </application>
 
 

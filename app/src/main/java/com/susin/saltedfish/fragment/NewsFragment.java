@@ -1,5 +1,6 @@
 package com.susin.saltedfish.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.susin.saltedfish.R;
+import com.susin.saltedfish.adapter.NewsAdapter;
 import com.susin.saltedfish.adapter.WeChatAdapter;
 import com.susin.saltedfish.callback.LoadMoreListener;
 import com.susin.saltedfish.callback.LoadResultCallBack;
@@ -22,9 +24,12 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 /**
- * 微信精选
+ * 说明：
+ *
+ * @作者 Susin
+ * @创建时间 2016/11/23 21:46
  */
-public class WeChatFragment extends MyBaseFragment implements LoadResultCallBack {
+public class NewsFragment extends MyBaseFragment implements LoadResultCallBack {
 
     // 列表
     @InjectView(R.id.recycler_view)
@@ -36,10 +41,7 @@ public class WeChatFragment extends MyBaseFragment implements LoadResultCallBack
     @InjectView(R.id.loading)
     RotateLoading loading;
 
-    private WeChatAdapter mAdapter;
-
-    public WeChatFragment() {
-    }
+    private NewsAdapter mAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,7 +82,7 @@ public class WeChatFragment extends MyBaseFragment implements LoadResultCallBack
             }
         });
 
-        mAdapter = new WeChatAdapter(getActivity(), mRecyclerView, this);
+        mAdapter = new NewsAdapter(getActivity(), mRecyclerView, this);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.loadFirst();
         loading.start();

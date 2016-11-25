@@ -33,15 +33,7 @@ import de.greenrobot.event.EventBus;
 
 
 /**
- * 说明：短信查询
- *
- * @作者 huangssh
- * @创建时间 2016/2/19 14:31
- * @版本
- * @------修改记录-------
- * @修改人
- * @版本
- * @修改内容
+ * 说明：无聊图
  */
 public class PictureFragment extends MyBaseFragment implements LoadResultCallBack, LoadFinishCallBack {
 
