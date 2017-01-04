@@ -33,6 +33,7 @@ import com.susin.saltedfish.utils.UtilText;
 import com.susin.saltedfish.view.ImageLoadProxy;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -80,7 +81,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     public void onBindViewHolder(final HistoryViewHolder holder, final int position) {
 
         final History history = mHistory.get(position);
-        holder.tvDate.setText(history.getYear());
+        Calendar c = Calendar.getInstance();
+        holder.tvDate.setText(history.getYear() + "年" + (c.get(Calendar.MONTH) + 1) + "月" + c.get(Calendar.DATE) + "日");
         holder.tvTitle.setText(history.getTitle());
         ImageLoadProxy.displayImageList(history.getPic(), holder.ivPic,  R.drawable.ic_loading_large, null, null);
         holder.tvDes.setText(history.getDes());

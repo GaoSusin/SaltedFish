@@ -103,7 +103,7 @@ public class FragmentTestActivity extends FragmentActivity {
                         getResources().getDrawable(R.drawable.ic_third),
                         Color.parseColor(colors[2]))
                         .selectedIcon(getResources().getDrawable(R.drawable.ic_seventh))
-                        .title("Diploma")
+                        .title("微信精选")
                         .badgeTitle("state")
                         .build()
         );
@@ -112,7 +112,7 @@ public class FragmentTestActivity extends FragmentActivity {
                         getResources().getDrawable(R.drawable.ic_fourth),
                         Color.parseColor(colors[3]))
 //                        .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
-                        .title("Flag")
+                        .title("今日头条")
                         .badgeTitle("icon")
                         .build()
         );
@@ -121,7 +121,7 @@ public class FragmentTestActivity extends FragmentActivity {
                         getResources().getDrawable(R.drawable.ic_fifth),
                         Color.parseColor(colors[4]))
                         .selectedIcon(getResources().getDrawable(R.drawable.ic_eighth))
-                        .title("Medal")
+                        .title("历史上的今天")
                         .badgeTitle("777")
                         .build()
         );
